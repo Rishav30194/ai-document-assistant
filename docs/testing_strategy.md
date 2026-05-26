@@ -37,26 +37,21 @@ Tests are written alongside implementation — not deferred to a polish phase. E
 | `@TempDir` | Temporary filesystem for file storage tests |
 | Testcontainers | Real DB/Redis in integration tests (Phase 5) |
 
-## Current Coverage (Phase 1)
+## Coverage (All Phases)
 
 | Class | Test Class | Type | Tests |
 |---|---|---|---|
 | `FileStorageService` | `FileStorageServiceTest` | Unit | 6 |
-| `DocumentService` | `DocumentServiceTest` | Unit | 10 |
+| `DocumentService` | `DocumentServiceTest` | Unit | 11 |
 | `DocumentController` + `GlobalExceptionHandler` | `DocumentControllerTest` | Web layer | 8 |
-| **Total** | | | **25** |
-
-## Planned Coverage (Phases 2–4)
-
-| Class | Test Class | Type |
-|---|---|---|
-| `IngestionService` | `IngestionServiceTest` | Unit |
-| `RagService` | `RagServiceTest` | Unit |
-| `ConversationService` | `ConversationServiceTest` | Unit |
-| `SearchService` | `SearchServiceTest` | Unit |
-| `ChatController` | `ChatControllerTest` | Web layer |
-| `SearchController` | `SearchControllerTest` | Web layer |
-| Full pipeline | `DocumentIngestionIntegrationTest` | Integration |
+| `IngestionService` | `IngestionServiceTest` | Unit | 5 |
+| `RagService` | `RagServiceTest` | Unit | 5 |
+| `ConversationService` | `ConversationServiceTest` | Unit | 5 |
+| `ChatController` | `ChatControllerTest` | Web layer | 7 |
+| `SearchService` | `SearchServiceTest` | Unit | 6 |
+| `SearchController` | `SearchControllerTest` | Web layer | 5 |
+| Full pipeline | `DocumentPipelineIntegrationTest` | Integration | 2 |
+| **Total** | | | **60** |
 
 ## Conventions
 

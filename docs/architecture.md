@@ -30,13 +30,17 @@ DocumentService        ChatService / SearchService
 ## Component Responsibilities
 
 ### DocumentService
-- Accepts uploaded file (PDF / DOCX)
-- Persists file to local filesystem
-- Parses text using `TikaDocumentReader`
-- Splits into chunks via `TokenTextSplitter`
-- Generates embeddings via OpenAI
-- Stores chunks + vectors in `PgVectorStore`
-- Tracks ingestion status on the `Document` entity
+- Accepts uploaded file (PDF / DOCX), validates content type
+- Persists file to local filesystem via `FileStorageService`
+- Saves document metadata to PostgreSQL with status `PENDING`
+- Triggers `IngestionService.ingest()` after the transaction commits
+
+### IngestionService
+- Parses PDF / DOCX text using `TikaDocumentReader`
+- Splits text into overlapping token windows via `TokenTextSplitter`
+- Tags each chunk with the `documentId` for filtered retrieval
+- Sends chunks to OpenAI for embedding, stores results in `PgVectorStore`
+- Updates document status: `PENDING → PROCESSING → READY` (or `FAILED`)
 
 ### ChatService
 - Receives user message + optional `sessionId`

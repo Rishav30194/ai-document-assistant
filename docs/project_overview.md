@@ -22,7 +22,8 @@ A REST API that enables intelligent document interaction through a RAG (Retrieva
 | GET | `/api/documents` | List all documents |
 | GET | `/api/documents/{id}` | Get document metadata |
 | DELETE | `/api/documents/{id}` | Delete document and all its chunks |
-| POST | `/api/chat` | Send a message — returns RAG-grounded answer |
+| POST | `/api/chat` | Send a message — auto-generates a new session ID |
+| POST | `/api/chat/{sessionId}` | Send a message in an existing session |
 | GET | `/api/chat/{sessionId}/history` | Get full conversation history |
 | DELETE | `/api/chat/{sessionId}` | Clear a conversation session |
 | POST | `/api/search` | Semantic search across documents |
