@@ -116,7 +116,7 @@ Production-quality observability, input validation, and a complete README so any
 
 Ordered easiest → most complex. To be done in this sequence.
 
-**Step 1 — `resolveDocumentName` tests [ ]**
+**Step 1 — `resolveDocumentName` tests [x]**
 `DocumentService.resolveDocumentName()` is a public method used by `RagService` and `SearchService` but has no direct tests. Add to `DocumentServiceTest`:
 - normal case: ID exists → returns name
 - missing ID: UUID not found → returns `"Unknown"`

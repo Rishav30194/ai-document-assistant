@@ -185,6 +185,34 @@ class DocumentServiceTest {
         verifyNoInteractions(fileStorageService);
     }
 
+    @Test
+    void resolveDocumentName_returnsName_whenDocumentExists() {
+        UUID id = UUID.randomUUID();
+        when(documentRepository.findById(id)).thenReturn(Optional.of(buildDocument(id, "Finance Report")));
+
+        assertThat(documentService.resolveDocumentName(id.toString())).isEqualTo("Finance Report");
+    }
+
+    @Test
+    void resolveDocumentName_returnsUnknown_whenDocumentNotFound() {
+        UUID id = UUID.randomUUID();
+        when(documentRepository.findById(id)).thenReturn(Optional.empty());
+
+        assertThat(documentService.resolveDocumentName(id.toString())).isEqualTo("Unknown");
+    }
+
+    @Test
+    void resolveDocumentName_returnsUnknown_whenIdIsMalformed() {
+        assertThat(documentService.resolveDocumentName("not-a-uuid")).isEqualTo("Unknown");
+        verifyNoInteractions(documentRepository);
+    }
+
+    @Test
+    void resolveDocumentName_returnsUnknown_whenIdIsNull() {
+        assertThat(documentService.resolveDocumentName(null)).isEqualTo("Unknown");
+        verifyNoInteractions(documentRepository);
+    }
+
     private Document buildDocument(UUID id, String name) {
         return Document.builder()
                 .id(id)
