@@ -29,18 +29,35 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
 
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
   ai:
     openai:
       api-key: ${OPENAI_API_KEY:}
       embedding:
         options:
           model: text-embedding-3-small
+    anthropic:
+      api-key: ${ANTHROPIC_API_KEY:}
+      chat:
+        options:
+          model: claude-haiku-4-5-20251001
+          max-tokens: 1024
     vectorstore:
       pgvector:
         initialize-schema: false
         dimensions: 1536
         distance-type: cosine_distance
         index-type: hnsw
+
+chat:
+  session:
+    ttl-hours: 24
+  rag:
+    top-k: 5
 
 storage:
   upload-dir: ${UPLOAD_DIR:./uploads}

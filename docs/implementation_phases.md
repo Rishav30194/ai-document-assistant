@@ -51,33 +51,34 @@ When you upload a document, the app automatically reads the file, breaks it into
 
 ---
 
-## Phase 3 — RAG Q&A + Chat
+## Phase 3 — RAG Q&A + Chat ✅
 
 **What this phase delivers:**
 Users can ask questions about their uploaded documents and get answers grounded in the actual document content. Supports multi-turn conversations — the app remembers what was said earlier in the same session.
 
 **AI Setup**
-- [ ] Anthropic Claude Haiku configured via Spring AI — the LLM that generates answers
+- [x] Anthropic Claude Haiku configured via Spring AI — the LLM that generates answers
 
 **Conversation Sessions**
-- [ ] `ConversationService` — stores and retrieves chat history per session in Redis (auto-expires after 24h)
+- [x] `ConversationService` — stores and retrieves chat history per session in Redis (auto-expires after 24h)
 
 **RAG Pipeline**
-- [ ] `RagService` — the core Q&A logic:
+- [x] `RagService` — the core Q&A logic:
   1. Searches pgvector for the most relevant document chunks
   2. Builds a prompt: system instructions + retrieved chunks + chat history + user question
   3. Sends to Claude and returns the answer with source references
 
 **Chat API**
-- [ ] `POST /api/chat` — send a message, get an AI answer back
-- [ ] `GET /api/chat/{sessionId}/history` — retrieve full conversation history
-- [ ] `DELETE /api/chat/{sessionId}` — clear a session
-- [ ] System prompt stored in `resources/prompts/` — easy to tune without code changes
+- [x] `POST /api/chat` — send a message with auto-generated session ID
+- [x] `POST /api/chat/{sessionId}` — send a message in an existing session
+- [x] `GET /api/chat/{sessionId}/history` — retrieve full conversation history
+- [x] `DELETE /api/chat/{sessionId}` — clear a session
+- [x] System prompt stored in `resources/prompts/` — easy to tune without code changes
 
 **Tests**
-- [ ] `RagServiceTest` — verifies retrieval and prompt building (mocked vector store + LLM)
-- [ ] `ConversationServiceTest` — verifies session save/load (mocked Redis)
-- [ ] `ChatControllerTest` — verifies HTTP contract for all chat endpoints
+- [x] `RagServiceTest` (5 tests) — verifies retrieval, prompt building, source resolution, history inclusion
+- [x] `ConversationServiceTest` (5 tests) — verifies session save/load/delete (mocked Redis)
+- [x] `ChatControllerTest` (7 tests) — verifies HTTP contract for all chat endpoints
 
 ---
 
