@@ -12,6 +12,9 @@ _Goal: Running Spring Boot app with document CRUD and Swagger UI._
 - [x] Swagger / OpenAPI 3 configured and accessible at `/swagger-ui.html`
 - [x] `application.yml` + `application-local.yml` structure
 - [x] Global exception handler (`@ControllerAdvice`)
+- [x] `FileStorageServiceTest`: 6 unit tests
+- [x] `DocumentServiceTest`: 10 unit tests (Mockito)
+- [x] `DocumentControllerTest`: 8 tests (`@WebMvcTest` + MockMvc)
 
 ## Phase 2 — Ingestion Pipeline
 _Goal: Uploaded documents are parsed, chunked, embedded, and stored in pgvector._
@@ -25,6 +28,7 @@ _Goal: Uploaded documents are parsed, chunked, embedded, and stored in pgvector.
 - [ ] `Document` entity: add `status` field (`PENDING`, `PROCESSING`, `READY`, `FAILED`)
 - [ ] Async ingestion (`@Async`) so upload endpoint returns immediately
 - [ ] Chunk metadata stores `documentId` for filtering
+- [ ] `IngestionServiceTest`: unit tests (mock `EmbeddingModel` + `VectorStore`)
 
 ## Phase 3 — RAG Q&A + Chat
 _Goal: Users can ask questions and get answers grounded in document content, with conversation history._
@@ -36,6 +40,9 @@ _Goal: Users can ask questions and get answers grounded in document content, wit
 - [ ] Chat request DTO: `{ message, sessionId (optional), documentId (optional filter) }`
 - [ ] Chat response DTO: `{ answer, sessionId, sources[] }`
 - [ ] System prompt template (externalised to `resources/prompts/`)
+- [ ] `RagServiceTest`: unit tests (mock `VectorStore` + `ChatClient`)
+- [ ] `ConversationServiceTest`: unit tests (mock Redis)
+- [ ] `ChatControllerTest`: `@WebMvcTest` tests
 
 ## Phase 4 — Semantic Search
 _Goal: Standalone search endpoint for cross-document similarity queries._
@@ -45,15 +52,16 @@ _Goal: Standalone search endpoint for cross-document similarity queries._
 - [ ] Search request DTO: `{ query, documentId (optional), topK }`
 - [ ] Search response DTO: list of `{ chunk, documentId, documentName, score }`
 - [ ] Support filtering by single document or search across all
+- [ ] `SearchServiceTest`: unit tests (mock `EmbeddingModel` + `VectorStore`)
+- [ ] `SearchControllerTest`: `@WebMvcTest` tests
 
 ## Phase 5 — Polish
-_Goal: Production-quality code quality, tests, and documentation._
+_Goal: Production-quality observability, validation, and documentation._
 
 - [ ] Structured logging (SLF4J + Logback JSON encoder)
-- [ ] Unit tests: `DocumentService`, `IngestionService`, `RagService`, `SearchService`
-- [ ] Integration tests: Testcontainers for PostgreSQL + Redis
 - [ ] Input validation (`@Valid`, custom validators for file type + size)
 - [ ] Actuator endpoints (`/actuator/health`, `/actuator/info`)
+- [ ] Integration tests: Testcontainers for PostgreSQL + Redis (full pipeline)
 - [ ] `README.md`: project description, setup steps, architecture diagram, sample requests
 - [ ] Code cleanup: consistent error codes, meaningful log messages, no TODOs
 

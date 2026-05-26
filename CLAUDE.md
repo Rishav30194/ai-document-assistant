@@ -38,6 +38,7 @@ OPENAI_API_KEY=sk-...
 - [`docs/project_overview.md`](docs/project_overview.md) — Goals, features, API endpoints, external services
 - [`docs/architecture.md`](docs/architecture.md) — System design, components, data flow, design decisions
 - [`docs/implementation_phases.md`](docs/implementation_phases.md) — Phase breakdown and task checklist
+- [`docs/testing_strategy.md`](docs/testing_strategy.md) — Test types, tools, coverage, and conventions
 
 ## Package Structure
 
