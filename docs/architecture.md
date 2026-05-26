@@ -102,7 +102,7 @@ Anthropic does not offer an embedding API. OpenAI `text-embedding-3-small` is th
 Keeps the REST API stateless. Conversation turns stored as a JSON list with a configurable TTL (default: 24h).
 
 **Local filesystem for files**
-Mounted as a Docker volume. The `StorageService` interface makes it straightforward to swap in S3 or Azure Blob if needed.
+Stored in a local directory configured via `UPLOAD_DIR` (defaults to `./uploads`). `FileStorageService` owns all path logic — swapping to S3 or another provider only requires changing that class.
 
 ## Infrastructure (Docker Compose)
 

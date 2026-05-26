@@ -4,7 +4,7 @@ RAG-based document Q&A API built with Spring Boot + Spring AI. Upload documents,
 
 ## Quick Reference
 
-- **Language:** Java 21 (compiled on 22), Spring Boot 3.3+, Spring AI 1.0+
+- **Language:** Java 21, Spring Boot 3.4, Spring AI 1.0.2
 - **LLM:** Anthropic Claude Haiku 4.5
 - **Embeddings:** OpenAI text-embedding-3-small
 - **Storage:** PostgreSQL + pgvector, Redis, Local filesystem
