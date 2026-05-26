@@ -126,7 +126,7 @@ Ordered easiest → most complex. To be done in this sequence.
 **Step 2 — Cache system prompt [x]**
 `RagService.loadSystemPrompt()` reads `prompts/rag-system.txt` from disk on every chat call. Fix: read once at startup with `@PostConstruct`, store in a field. No behaviour change, no test changes needed.
 
-**Step 3 — Store relative file paths [ ]**
+**Step 3 — Store relative file paths [x]**
 `FileStorageService.store()` returns an absolute path (`/Users/.../uploads/uuid_file.pdf`) which is persisted in the `documents` table. If `upload-dir` changes the app breaks. Fix: store just the filename (`uuid_file.pdf`), reconstruct the full path at read time. Affects `FileStorageService` and `DocumentService.delete()`. Existing rows in the DB will have absolute paths — they are dev/test data only, safe to discard by resetting the DB.
 
 ---

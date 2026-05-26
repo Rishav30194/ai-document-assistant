@@ -41,8 +41,8 @@ Tests are written alongside implementation — not deferred to a polish phase. E
 
 | Class | Test Class | Type | Tests |
 |---|---|---|---|
-| `FileStorageService` | `FileStorageServiceTest` | Unit | 6 |
-| `DocumentService` | `DocumentServiceTest` | Unit | 11 |
+| `FileStorageService` | `FileStorageServiceTest` | Unit | 7 |
+| `DocumentService` | `DocumentServiceTest` | Unit | 15 |
 | `DocumentController` + `GlobalExceptionHandler` | `DocumentControllerTest` | Web layer | 8 |
 | `IngestionService` | `IngestionServiceTest` | Unit | 6 |
 | `RagService` | `RagServiceTest` | Unit | 5 |
@@ -51,7 +51,7 @@ Tests are written alongside implementation — not deferred to a polish phase. E
 | `SearchService` | `SearchServiceTest` | Unit | 6 |
 | `SearchController` | `SearchControllerTest` | Web layer | 5 |
 | Full pipeline | `DocumentPipelineIntegrationTest` | Integration | 2 |
-| **Total** | | | **61** |
+| **Total** | | | **66** |
 
 ## Conventions
 

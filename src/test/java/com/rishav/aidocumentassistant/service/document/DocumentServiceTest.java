@@ -42,7 +42,8 @@ class DocumentServiceTest {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "report.pdf", "application/pdf", "content".getBytes()
         );
-        when(fileStorageService.store(file)).thenReturn("/uploads/report.pdf");
+        when(fileStorageService.store(file)).thenReturn("uuid_report.pdf");
+        when(fileStorageService.resolveAbsolutePath("uuid_report.pdf")).thenReturn("/uploads/uuid_report.pdf");
         when(documentRepository.save(any(Document.class))).thenAnswer(i -> i.getArgument(0));
 
         DocumentResponse response = documentService.upload(file, "My Report");
@@ -58,7 +59,8 @@ class DocumentServiceTest {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "report.pdf", "application/pdf", "content".getBytes()
         );
-        when(fileStorageService.store(file)).thenReturn("/uploads/report.pdf");
+        when(fileStorageService.store(file)).thenReturn("uuid_report.pdf");
+        when(fileStorageService.resolveAbsolutePath("uuid_report.pdf")).thenReturn("/uploads/uuid_report.pdf");
         when(documentRepository.save(any(Document.class))).thenAnswer(i -> i.getArgument(0));
 
         DocumentResponse response = documentService.upload(file, null);
@@ -71,7 +73,8 @@ class DocumentServiceTest {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "report.pdf", "application/pdf", "content".getBytes()
         );
-        when(fileStorageService.store(file)).thenReturn("/uploads/report.pdf");
+        when(fileStorageService.store(file)).thenReturn("uuid_report.pdf");
+        when(fileStorageService.resolveAbsolutePath("uuid_report.pdf")).thenReturn("/uploads/uuid_report.pdf");
         when(documentRepository.save(any(Document.class))).thenAnswer(i -> i.getArgument(0));
 
         DocumentResponse response = documentService.upload(file, "   ");
@@ -84,7 +87,8 @@ class DocumentServiceTest {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "notes.pdf", "application/pdf", "content".getBytes()
         );
-        when(fileStorageService.store(file)).thenReturn("/uploads/notes.pdf");
+        when(fileStorageService.store(file)).thenReturn("uuid_notes.pdf");
+        when(fileStorageService.resolveAbsolutePath("uuid_notes.pdf")).thenReturn("/uploads/uuid_notes.pdf");
         when(documentRepository.save(any(Document.class))).thenAnswer(i -> i.getArgument(0));
 
         ArgumentCaptor<Document> captor = ArgumentCaptor.forClass(Document.class);
@@ -94,7 +98,7 @@ class DocumentServiceTest {
         verify(documentRepository).save(captor.capture());
         Document saved = captor.getValue();
         assertThat(saved.getStatus()).isEqualTo(DocumentStatus.PENDING);
-        assertThat(saved.getFilePath()).isEqualTo("/uploads/notes.pdf");
+        assertThat(saved.getFilePath()).isEqualTo("uuid_notes.pdf");
         assertThat(saved.getUploadedAt()).isNotNull();
         assertThat(saved.getProcessedAt()).isNull();
     }
@@ -105,7 +109,8 @@ class DocumentServiceTest {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "report.pdf", "application/pdf", "content".getBytes()
         );
-        when(fileStorageService.store(file)).thenReturn("/uploads/report.pdf");
+        when(fileStorageService.store(file)).thenReturn("uuid_report.pdf");
+        when(fileStorageService.resolveAbsolutePath("uuid_report.pdf")).thenReturn("/uploads/uuid_report.pdf");
         when(documentRepository.save(any(Document.class))).thenAnswer(i -> {
             Document doc = i.getArgument(0);
             doc.setId(generatedId);
@@ -114,7 +119,7 @@ class DocumentServiceTest {
 
         documentService.upload(file, "Report");
 
-        verify(ingestionService).ingest(eq(generatedId), eq("/uploads/report.pdf"));
+        verify(ingestionService).ingest(eq(generatedId), eq("/uploads/uuid_report.pdf"));
     }
 
     @Test
@@ -220,7 +225,7 @@ class DocumentServiceTest {
                 .originalFileName("file.pdf")
                 .contentType("application/pdf")
                 .fileSize(1024L)
-                .filePath("/uploads/file.pdf")
+                .filePath("uuid_file.pdf")
                 .status(DocumentStatus.PENDING)
                 .uploadedAt(LocalDateTime.now())
                 .build();

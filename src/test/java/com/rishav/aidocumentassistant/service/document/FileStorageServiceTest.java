@@ -25,15 +25,16 @@ class FileStorageServiceTest {
     }
 
     @Test
-    void store_savesFileAndReturnsAbsolutePath() {
+    void store_savesFileAndReturnsFilename() {
         MockMultipartFile file = new MockMultipartFile(
                 "file", "resume.pdf", "application/pdf", "pdf content".getBytes()
         );
 
-        String path = fileStorageService.store(file);
+        String filename = fileStorageService.store(file);
 
-        assertThat(path).contains("resume.pdf");
-        assertThat(Files.exists(Path.of(path))).isTrue();
+        assertThat(filename).contains("resume.pdf");
+        assertThat(filename).doesNotContain("/");
+        assertThat(Files.exists(tempDir.resolve(filename))).isTrue();
     }
 
     @Test
@@ -42,10 +43,10 @@ class FileStorageServiceTest {
                 "file", null, "application/pdf", "content".getBytes()
         );
 
-        String path = fileStorageService.store(file);
+        String filename = fileStorageService.store(file);
 
-        assertThat(path).isNotNull();
-        assertThat(Files.exists(Path.of(path))).isTrue();
+        assertThat(filename).isNotNull();
+        assertThat(Files.exists(tempDir.resolve(filename))).isTrue();
     }
 
     @Test
@@ -54,26 +55,33 @@ class FileStorageServiceTest {
                 "file", "empty.pdf", "application/pdf", new byte[0]
         );
 
-        String path = fileStorageService.store(file);
+        String filename = fileStorageService.store(file);
 
-        assertThat(Files.exists(Path.of(path))).isTrue();
+        assertThat(Files.exists(tempDir.resolve(filename))).isTrue();
     }
 
     @Test
     void delete_removesFileFromDisk() throws IOException {
-        Path file = tempDir.resolve("to-delete.pdf");
-        Files.write(file, "content".getBytes());
+        String filename = "to-delete.pdf";
+        Files.write(tempDir.resolve(filename), "content".getBytes());
 
-        fileStorageService.delete(file.toString());
+        fileStorageService.delete(filename);
 
-        assertThat(Files.exists(file)).isFalse();
+        assertThat(Files.exists(tempDir.resolve(filename))).isFalse();
     }
 
     @Test
     void delete_nonExistentFile_doesNotThrow() {
-        String nonExistent = tempDir.resolve("ghost.pdf").toString();
+        assertThatNoException().isThrownBy(() -> fileStorageService.delete("ghost.pdf"));
+    }
 
-        assertThatNoException().isThrownBy(() -> fileStorageService.delete(nonExistent));
+    @Test
+    void resolveAbsolutePath_returnsFullPathForFilename() {
+        String filename = "uuid_report.pdf";
+
+        String resolved = fileStorageService.resolveAbsolutePath(filename);
+
+        assertThat(resolved).isEqualTo(tempDir.resolve(filename).toString());
     }
 
     @Test

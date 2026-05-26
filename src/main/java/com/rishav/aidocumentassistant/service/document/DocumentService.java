@@ -54,16 +54,16 @@ public class DocumentService {
 
         // Trigger ingestion after commit — ensures the document is visible to the async thread
         UUID savedId = saved.getId();
-        String savedPath = saved.getFilePath();
+        String savedAbsolutePath = fileStorageService.resolveAbsolutePath(saved.getFilePath());
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override
                 public void afterCommit() {
-                    ingestionService.ingest(savedId, savedPath);
+                    ingestionService.ingest(savedId, savedAbsolutePath);
                 }
             });
         } else {
-            ingestionService.ingest(savedId, savedPath);
+            ingestionService.ingest(savedId, savedAbsolutePath);
         }
 
         return toResponse(saved);

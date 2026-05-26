@@ -35,14 +35,18 @@ public class FileStorageService {
         } catch (IOException e) {
             throw new FileStorageException("Could not store file: " + originalName, e);
         }
-        return target.toString();
+        return storedName;
     }
 
-    public void delete(String filePath) {
+    public void delete(String filename) {
         try {
-            Files.deleteIfExists(Paths.get(filePath));
+            Files.deleteIfExists(uploadDir.resolve(filename));
         } catch (IOException e) {
-            throw new FileStorageException("Could not delete file: " + filePath, e);
+            throw new FileStorageException("Could not delete file: " + filename, e);
         }
+    }
+
+    public String resolveAbsolutePath(String filename) {
+        return uploadDir.resolve(filename).toString();
     }
 }
