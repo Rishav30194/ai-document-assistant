@@ -2,8 +2,7 @@ package com.rishav.aidocumentassistant.service.search;
 
 import com.rishav.aidocumentassistant.dto.SearchHit;
 import com.rishav.aidocumentassistant.dto.SearchQuery;
-import com.rishav.aidocumentassistant.model.Document;
-import com.rishav.aidocumentassistant.repository.DocumentRepository;
+import com.rishav.aidocumentassistant.service.document.DocumentService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -16,7 +15,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,7 +28,7 @@ class SearchServiceTest {
     private VectorStore vectorStore;
 
     @Mock
-    private DocumentRepository documentRepository;
+    private DocumentService documentService;
 
     @InjectMocks
     private SearchService searchService;
@@ -38,8 +36,7 @@ class SearchServiceTest {
     @Test
     void search_returnsHitsWithScoreAndDocumentName() {
         UUID docId = UUID.randomUUID();
-        Document doc = Document.builder().id(docId).name("Finance Report").build();
-        when(documentRepository.findById(docId)).thenReturn(Optional.of(doc));
+        when(documentService.resolveDocumentName(docId.toString())).thenReturn("Finance Report");
 
         org.springframework.ai.document.Document chunk = org.springframework.ai.document.Document.builder()
                 .text("Revenue increased by 20%.")
@@ -98,13 +95,13 @@ class SearchServiceTest {
         List<SearchHit> hits = searchService.search(buildQuery("obscure query", null, 5));
 
         assertThat(hits).isEmpty();
-        verifyNoInteractions(documentRepository);
+        verifyNoInteractions(documentService);
     }
 
     @Test
     void search_handlesUnknownDocumentId_gracefully() {
         String unknownId = UUID.randomUUID().toString();
-        when(documentRepository.findById(any())).thenReturn(Optional.empty());
+        when(documentService.resolveDocumentName(unknownId)).thenReturn("Unknown");
 
         org.springframework.ai.document.Document chunk = org.springframework.ai.document.Document.builder()
                 .text("Some content.")

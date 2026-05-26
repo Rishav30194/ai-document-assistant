@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,7 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +34,9 @@ class IngestionServiceTest {
 
     @Mock
     private DocumentRepository documentRepository;
+
+    @Mock
+    private JdbcTemplate jdbcTemplate;
 
     @InjectMocks
     private IngestionService ingestionService;
@@ -56,7 +60,7 @@ class IngestionServiceTest {
                 .status(DocumentStatus.PENDING)
                 .uploadedAt(LocalDateTime.now())
                 .build();
-        when(documentRepository.findById(documentId)).thenReturn(Optional.of(testDocument));
+        lenient().when(documentRepository.findById(documentId)).thenReturn(Optional.of(testDocument));
     }
 
     @Test
@@ -134,6 +138,17 @@ class IngestionServiceTest {
         ingestionService.ingest(documentId, file.toString());
 
         assertThat(capturedStatuses.get(0)).isEqualTo(DocumentStatus.PROCESSING);
+    }
+
+    @Test
+    void deleteChunks_removesChunks_fromVectorStore() {
+        when(jdbcTemplate.update(anyString(), eq(documentId.toString()))).thenReturn(3);
+
+        ingestionService.deleteChunks(documentId);
+
+        ArgumentCaptor<String> sqlCaptor = ArgumentCaptor.forClass(String.class);
+        verify(jdbcTemplate).update(sqlCaptor.capture(), eq(documentId.toString()));
+        assertThat(sqlCaptor.getValue()).contains("vector_store");
     }
 
     private Path createTextFile(String content) throws IOException {

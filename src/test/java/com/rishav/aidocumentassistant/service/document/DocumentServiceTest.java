@@ -160,13 +160,14 @@ class DocumentServiceTest {
     }
 
     @Test
-    void delete_deletesFileAndDocument_whenFound() {
+    void delete_deletesChunksFileAndDocument_whenFound() {
         UUID id = UUID.randomUUID();
         Document doc = buildDocument(id, "To Delete");
         when(documentRepository.findById(id)).thenReturn(Optional.of(doc));
 
         documentService.delete(id);
 
+        verify(ingestionService).deleteChunks(id);
         verify(fileStorageService).delete(doc.getFilePath());
         verify(documentRepository).delete(doc);
     }
@@ -180,6 +181,7 @@ class DocumentServiceTest {
                 .isInstanceOf(DocumentNotFoundException.class)
                 .hasMessageContaining(id.toString());
 
+        verifyNoInteractions(ingestionService);
         verifyNoInteractions(fileStorageService);
     }
 

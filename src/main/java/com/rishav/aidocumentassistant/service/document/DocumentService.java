@@ -87,8 +87,20 @@ public class DocumentService {
     public void delete(UUID id) {
         Document document = documentRepository.findById(id)
                 .orElseThrow(() -> new DocumentNotFoundException(id));
+        ingestionService.deleteChunks(id);
         fileStorageService.delete(document.getFilePath());
         documentRepository.delete(document);
+    }
+
+    public String resolveDocumentName(String documentId) {
+        if (documentId == null) return "Unknown";
+        try {
+            return documentRepository.findById(UUID.fromString(documentId))
+                    .map(Document::getName)
+                    .orElse("Unknown");
+        } catch (IllegalArgumentException e) {
+            return "Unknown";
+        }
     }
 
     private DocumentResponse toResponse(Document doc) {

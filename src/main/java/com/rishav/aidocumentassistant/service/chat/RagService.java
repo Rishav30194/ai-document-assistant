@@ -3,7 +3,7 @@ package com.rishav.aidocumentassistant.service.chat;
 import com.rishav.aidocumentassistant.dto.ChatResponse;
 import com.rishav.aidocumentassistant.dto.SourceReference;
 import com.rishav.aidocumentassistant.model.ConversationTurn;
-import com.rishav.aidocumentassistant.repository.DocumentRepository;
+import com.rishav.aidocumentassistant.service.document.DocumentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -32,7 +31,7 @@ public class RagService {
     private final ChatClient chatClient;
     private final VectorStore vectorStore;
     private final ConversationService conversationService;
-    private final DocumentRepository documentRepository;
+    private final DocumentService documentService;
 
     @Value("${chat.rag.top-k:5}")
     private int topK;
@@ -110,27 +109,15 @@ public class RagService {
     private List<SourceReference> buildSources(List<Document> chunks) {
         return chunks.stream().map(chunk -> {
             String docId = (String) chunk.getMetadata().get("documentId");
-            String docName = resolveDocumentName(docId);
             String excerpt = chunk.getText().length() > 200
                     ? chunk.getText().substring(0, 200) + "…"
                     : chunk.getText();
             return SourceReference.builder()
                     .documentId(docId)
-                    .documentName(docName)
+                    .documentName(documentService.resolveDocumentName(docId))
                     .excerpt(excerpt)
                     .build();
         }).toList();
-    }
-
-    private String resolveDocumentName(String documentId) {
-        if (documentId == null) return "Unknown";
-        try {
-            return documentRepository.findById(UUID.fromString(documentId))
-                    .map(com.rishav.aidocumentassistant.model.Document::getName)
-                    .orElse("Unknown");
-        } catch (IllegalArgumentException e) {
-            return "Unknown";
-        }
     }
 
     private String loadSystemPrompt() {

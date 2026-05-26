@@ -2,8 +2,7 @@ package com.rishav.aidocumentassistant.service.chat;
 
 import com.rishav.aidocumentassistant.dto.ChatResponse;
 import com.rishav.aidocumentassistant.model.ConversationTurn;
-import com.rishav.aidocumentassistant.model.Document;
-import com.rishav.aidocumentassistant.repository.DocumentRepository;
+import com.rishav.aidocumentassistant.service.document.DocumentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,7 +16,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,7 +41,7 @@ class RagServiceTest {
     private ConversationService conversationService;
 
     @Mock
-    private DocumentRepository documentRepository;
+    private DocumentService documentService;
 
     @InjectMocks
     private RagService ragService;
@@ -107,10 +105,9 @@ class RagServiceTest {
     }
 
     @Test
-    void chat_resolvesDocumentName_fromRepository() {
+    void chat_resolvesDocumentName_fromDocumentService() {
         UUID docId = UUID.randomUUID();
-        Document doc = Document.builder().id(docId).name("My Report").build();
-        when(documentRepository.findById(docId)).thenReturn(Optional.of(doc));
+        when(documentService.resolveDocumentName(docId.toString())).thenReturn("My Report");
 
         org.springframework.ai.document.Document chunk = new org.springframework.ai.document.Document(
                 "Report content", Map.of("documentId", docId.toString())

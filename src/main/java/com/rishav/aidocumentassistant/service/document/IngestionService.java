@@ -9,6 +9,7 @@ import org.springframework.ai.reader.tika.TikaDocumentReader;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class IngestionService {
 
     private final VectorStore vectorStore;
     private final DocumentRepository documentRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     @Async("ingestionExecutor")
     public void ingest(UUID documentId, String filePath) {
@@ -56,6 +58,13 @@ public class IngestionService {
             log.error("Ingestion failed — documentId={}", documentId, e);
             updateStatus(documentId, DocumentStatus.FAILED, null);
         }
+    }
+
+    public void deleteChunks(UUID documentId) {
+        int deleted = jdbcTemplate.update(
+                "DELETE FROM vector_store WHERE metadata->>'documentId' = ?",
+                documentId.toString());
+        log.info("Deleted {} chunk(s) from vector store — documentId={}", deleted, documentId);
     }
 
     private void updateStatus(UUID id, DocumentStatus status, LocalDateTime processedAt) {

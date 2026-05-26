@@ -12,7 +12,7 @@ Client (Postman / Swagger UI)
   │                       │
 DocumentController     ChatController / SearchController
   │                       │
-DocumentService        ChatService / SearchService
+DocumentService        RagService + ConversationService / SearchService
   │                       │
   │               ┌───────┴────────┐
   │               │                │
@@ -42,13 +42,16 @@ DocumentService        ChatService / SearchService
 - Sends chunks to OpenAI for embedding, stores results in `PgVectorStore`
 - Updates document status: `PENDING → PROCESSING → READY` (or `FAILED`)
 
-### ChatService
-- Receives user message + optional `sessionId`
-- Loads conversation history from Redis
-- Performs similarity search on `PgVectorStore` to retrieve relevant chunks
+### RagService
+- Receives user message + optional `sessionId` and `documentId` filter
+- Retrieves relevant chunks from `PgVectorStore` via similarity search
 - Builds a RAG prompt: system instructions + retrieved context + conversation history + user message
 - Calls Anthropic Claude Haiku via Spring AI `ChatClient`
-- Persists the new turn to Redis with TTL
+- Returns the answer with source references (document name + excerpt)
+
+### ConversationService
+- Loads and persists per-session conversation history in Redis (TTL: 24h)
+- Serialises turn lists as JSON; deserialises on read
 
 ### SearchService
 - Performs a pure similarity search on `PgVectorStore`
