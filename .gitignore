@@ -1,0 +1,24 @@
+# Maven
+target/
+*.class
+
+# Environment — never commit real keys
+.env
+application-local.yml
+
+# Uploaded files
+uploads/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
