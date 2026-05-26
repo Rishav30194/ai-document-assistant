@@ -49,6 +49,8 @@ class RagServiceTest {
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(ragService, "topK", 3);
+        ReflectionTestUtils.setField(ragService, "systemPromptTemplate",
+                "Answer questions using the provided document excerpts.\n\nDocument excerpts:\n{context}");
     }
 
     @Test

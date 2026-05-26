@@ -14,6 +14,7 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,19 @@ public class RagService {
     @Value("${chat.rag.top-k:5}")
     private int topK;
 
+    private String systemPromptTemplate;
+
+    @PostConstruct
+    void init() {
+        try {
+            systemPromptTemplate = new ClassPathResource("prompts/rag-system.txt")
+                    .getContentAsString(StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            log.error("Failed to load system prompt, using fallback", e);
+            systemPromptTemplate = "Answer questions using the provided document excerpts.\n\nDocument excerpts:\n{context}";
+        }
+    }
+
     public ChatResponse chat(String sessionId, String userMessage, String documentId) {
         // 1. Retrieve relevant chunks
         List<Document> chunks = retrieveChunks(userMessage, documentId);
@@ -43,8 +57,8 @@ public class RagService {
         // 2. Build context string from chunks
         String context = buildContext(chunks);
 
-        // 3. Load system prompt template and inject context
-        String systemPrompt = loadSystemPrompt().replace("{context}", context);
+        // 3. Inject context into the cached system prompt template
+        String systemPrompt = systemPromptTemplate.replace("{context}", context);
 
         // 4. Build message history for multi-turn
         List<ConversationTurn> history = conversationService.getHistory(sessionId);
@@ -120,13 +134,5 @@ public class RagService {
         }).toList();
     }
 
-    private String loadSystemPrompt() {
-        try {
-            return new ClassPathResource("prompts/rag-system.txt")
-                    .getContentAsString(StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            log.error("Failed to load system prompt", e);
-            return "Answer questions using the provided document excerpts.\n\nDocument excerpts:\n{context}";
-        }
-    }
+
 }

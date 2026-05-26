@@ -123,7 +123,7 @@ Ordered easiest → most complex. To be done in this sequence.
 - malformed UUID → returns `"Unknown"`
 - null input → returns `"Unknown"`
 
-**Step 2 — Cache system prompt [ ]**
+**Step 2 — Cache system prompt [x]**
 `RagService.loadSystemPrompt()` reads `prompts/rag-system.txt` from disk on every chat call. Fix: read once at startup with `@PostConstruct`, store in a field. No behaviour change, no test changes needed.
 
 **Step 3 — Store relative file paths [ ]**
