@@ -31,6 +31,9 @@ class DocumentServiceTest {
     @Mock
     private FileStorageService fileStorageService;
 
+    @Mock
+    private IngestionService ingestionService;
+
     @InjectMocks
     private DocumentService documentService;
 
@@ -94,6 +97,24 @@ class DocumentServiceTest {
         assertThat(saved.getFilePath()).isEqualTo("/uploads/notes.pdf");
         assertThat(saved.getUploadedAt()).isNotNull();
         assertThat(saved.getProcessedAt()).isNull();
+    }
+
+    @Test
+    void upload_triggersIngestion_afterSave() {
+        UUID generatedId = UUID.randomUUID();
+        MockMultipartFile file = new MockMultipartFile(
+                "file", "report.pdf", "application/pdf", "content".getBytes()
+        );
+        when(fileStorageService.store(file)).thenReturn("/uploads/report.pdf");
+        when(documentRepository.save(any(Document.class))).thenAnswer(i -> {
+            Document doc = i.getArgument(0);
+            doc.setId(generatedId);
+            return doc;
+        });
+
+        documentService.upload(file, "Report");
+
+        verify(ingestionService).ingest(eq(generatedId), eq("/uploads/report.pdf"));
     }
 
     @Test

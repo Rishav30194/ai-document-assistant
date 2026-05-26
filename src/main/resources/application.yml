@@ -29,6 +29,19 @@ spring:
       max-file-size: 50MB
       max-request-size: 50MB
 
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      embedding:
+        options:
+          model: text-embedding-3-small
+    vectorstore:
+      pgvector:
+        initialize-schema: false
+        dimensions: 1536
+        distance-type: cosine_distance
+        index-type: hnsw
+
 storage:
   upload-dir: ${UPLOAD_DIR:./uploads}
 

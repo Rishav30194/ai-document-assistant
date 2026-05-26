@@ -8,6 +8,8 @@ import com.rishav.aidocumentassistant.repository.DocumentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -20,6 +22,7 @@ public class DocumentService {
 
     private final DocumentRepository documentRepository;
     private final FileStorageService fileStorageService;
+    private final IngestionService ingestionService;
 
     @Transactional
     public DocumentResponse upload(MultipartFile file, String name) {
@@ -35,7 +38,23 @@ public class DocumentService {
                 .uploadedAt(LocalDateTime.now())
                 .build();
 
-        return toResponse(documentRepository.save(document));
+        Document saved = documentRepository.save(document);
+
+        // Trigger ingestion after commit — ensures the document is visible to the async thread
+        UUID savedId = saved.getId();
+        String savedPath = saved.getFilePath();
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    ingestionService.ingest(savedId, savedPath);
+                }
+            });
+        } else {
+            ingestionService.ingest(savedId, savedPath);
+        }
+
+        return toResponse(saved);
     }
 
     @Transactional(readOnly = true)
