@@ -6,7 +6,7 @@
 Client (Postman / Swagger UI)
            │
            ▼
-  Spring Boot REST API  :8080
+  Spring Boot REST API  :8081
            │
   ┌────────┴──────────────┐
   │                       │
@@ -84,13 +84,13 @@ Query text → Embed (OpenAI) → Similarity search (pgvector) → Return ranked
 Runs in Docker alongside Postgres — zero extra cloud cost. Spring AI has first-class `PgVectorStore` support. Easy to replace later if scale demands it.
 
 **Separate embedding provider**
-Anthropic does not offer an embedding API. OpenAI `text-embedding-3-small` is the cheapest available option and is widely recognised in job interviews.
+Anthropic does not offer an embedding API. OpenAI `text-embedding-3-small` is the cheapest available option at $0.02/1M tokens.
 
 **Redis for conversation state**
 Keeps the REST API stateless. Conversation turns stored as a JSON list with a configurable TTL (default: 24h).
 
 **Local filesystem for files**
-Mounted as a Docker volume. Clean for portfolio use. The `StorageService` interface makes it straightforward to swap in S3 or Azure Blob if needed.
+Mounted as a Docker volume. The `StorageService` interface makes it straightforward to swap in S3 or Azure Blob if needed.
 
 ## Infrastructure (Docker Compose)
 

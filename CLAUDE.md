@@ -1,6 +1,6 @@
 # AI Document Assistant — Claude Guide
 
-RAG-based document Q&A API built with Spring Boot + Spring AI. Portfolio project demonstrating end-to-end AI engineering.
+RAG-based document Q&A API built with Spring Boot + Spring AI. Upload documents, ask questions, get answers grounded in document content.
 
 ## Quick Reference
 

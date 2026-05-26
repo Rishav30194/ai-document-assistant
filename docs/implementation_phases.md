@@ -1,17 +1,17 @@
 # Implementation Phases
 
-## Phase 1 — Foundation
+## Phase 1 — Foundation ✅
 _Goal: Running Spring Boot app with document CRUD and Swagger UI._
 
-- [ ] Maven project: Java 21, Spring Boot 3.3+, all dependencies in `pom.xml`
-- [ ] `docker-compose.yml`: PostgreSQL + pgvector, Redis
-- [ ] `Document` JPA entity + repository
-- [ ] `DocumentController`: upload, list, get, delete endpoints
-- [ ] `FileStorageService`: save/delete files on local filesystem
-- [ ] Flyway migration: `documents` table
-- [ ] Swagger / OpenAPI 3 configured and accessible at `/swagger-ui.html`
-- [ ] `application.yml` + `application-local.yml` structure
-- [ ] Global exception handler (`@ControllerAdvice`)
+- [x] Maven project: Java 21, Spring Boot 3.4.1, all dependencies in `pom.xml`
+- [x] `docker-compose.yml`: PostgreSQL + pgvector, Redis
+- [x] `Document` JPA entity + repository
+- [x] `DocumentController`: upload, list, get, delete endpoints
+- [x] `FileStorageService`: save/delete files on local filesystem
+- [x] Flyway migration: `documents` table
+- [x] Swagger / OpenAPI 3 configured and accessible at `/swagger-ui.html`
+- [x] `application.yml` + `application-local.yml` structure
+- [x] Global exception handler (`@ControllerAdvice`)
 
 ## Phase 2 — Ingestion Pipeline
 _Goal: Uploaded documents are parsed, chunked, embedded, and stored in pgvector._

@@ -2,9 +2,7 @@
 
 ## Goal
 
-A portfolio-grade REST API that demonstrates a production-quality RAG (Retrieval-Augmented Generation) pipeline. Users can upload documents, ask questions about them, and get LLM-powered answers grounded in the document content — with full conversation history.
-
-Showcases: Spring AI, Anthropic + OpenAI API integration, vector search, event-driven ingestion, and clean Spring Boot architecture.
+A REST API that enables intelligent document interaction through a RAG (Retrieval-Augmented Generation) pipeline. Users upload documents, ask questions about them, and receive answers grounded in the actual document content — with full multi-turn conversation support and semantic search across all uploaded documents.
 
 ## Features
 
