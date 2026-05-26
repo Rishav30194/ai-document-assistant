@@ -44,14 +44,14 @@ Tests are written alongside implementation — not deferred to a polish phase. E
 | `FileStorageService` | `FileStorageServiceTest` | Unit | 6 |
 | `DocumentService` | `DocumentServiceTest` | Unit | 11 |
 | `DocumentController` + `GlobalExceptionHandler` | `DocumentControllerTest` | Web layer | 8 |
-| `IngestionService` | `IngestionServiceTest` | Unit | 5 |
+| `IngestionService` | `IngestionServiceTest` | Unit | 6 |
 | `RagService` | `RagServiceTest` | Unit | 5 |
 | `ConversationService` | `ConversationServiceTest` | Unit | 5 |
 | `ChatController` | `ChatControllerTest` | Web layer | 7 |
 | `SearchService` | `SearchServiceTest` | Unit | 6 |
 | `SearchController` | `SearchControllerTest` | Web layer | 5 |
 | Full pipeline | `DocumentPipelineIntegrationTest` | Integration | 2 |
-| **Total** | | | **60** |
+| **Total** | | | **61** |
 
 ## Conventions
 

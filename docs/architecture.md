@@ -66,6 +66,11 @@ Upload → Save file → Parse text → Chunk → Embed (OpenAI) → Store in pg
                                                               └── Update Document status = READY
 ```
 
+### Delete (DELETE /api/documents/{id})
+```
+Find document → Delete vector chunks (vector_store) → Delete file → Delete DB row
+```
+
 ### RAG Q&A (POST /api/chat)
 ```
 User message

@@ -47,7 +47,7 @@ When you upload a document, the app automatically reads the file, breaks it into
 - [x] Document status tracking — `PENDING` → `PROCESSING` → `READY` (or `FAILED` if anything goes wrong)
 
 **Tests**
-- [x] `IngestionServiceTest` (5 tests) — verifies status transitions, metadata enrichment, and error handling
+- [x] `IngestionServiceTest` (6 tests) — verifies status transitions, metadata enrichment, error handling, and chunk deletion
 
 ---
 
