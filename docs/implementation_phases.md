@@ -112,6 +112,25 @@ Production-quality observability, input validation, and a complete README so any
 
 ---
 
+## Pending Improvements (post-Phase 5)
+
+Ordered easiest → most complex. To be done in this sequence.
+
+**Step 1 — `resolveDocumentName` tests [ ]**
+`DocumentService.resolveDocumentName()` is a public method used by `RagService` and `SearchService` but has no direct tests. Add to `DocumentServiceTest`:
+- normal case: ID exists → returns name
+- missing ID: UUID not found → returns `"Unknown"`
+- malformed UUID → returns `"Unknown"`
+- null input → returns `"Unknown"`
+
+**Step 2 — Cache system prompt [ ]**
+`RagService.loadSystemPrompt()` reads `prompts/rag-system.txt` from disk on every chat call. Fix: read once at startup with `@PostConstruct`, store in a field. No behaviour change, no test changes needed.
+
+**Step 3 — Store relative file paths [ ]**
+`FileStorageService.store()` returns an absolute path (`/Users/.../uploads/uuid_file.pdf`) which is persisted in the `documents` table. If `upload-dir` changes the app breaks. Fix: store just the filename (`uuid_file.pdf`), reconstruct the full path at read time. Affects `FileStorageService` and `DocumentService.delete()`. Existing rows in the DB will have absolute paths — they are dev/test data only, safe to discard by resetting the DB.
+
+---
+
 ## Status Legend
 
 | Symbol | Meaning |
