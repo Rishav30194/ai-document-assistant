@@ -2,6 +2,7 @@ package com.rishav.aidocumentassistant.service.document;
 
 import com.rishav.aidocumentassistant.dto.DocumentResponse;
 import com.rishav.aidocumentassistant.exception.DocumentNotFoundException;
+import com.rishav.aidocumentassistant.exception.UnsupportedFileTypeException;
 import com.rishav.aidocumentassistant.model.Document;
 import com.rishav.aidocumentassistant.model.DocumentStatus;
 import com.rishav.aidocumentassistant.repository.DocumentRepository;
@@ -14,11 +15,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class DocumentService {
+
+    private static final Set<String> ACCEPTED_TYPES = Set.of(
+            "application/pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    );
 
     private final DocumentRepository documentRepository;
     private final FileStorageService fileStorageService;
@@ -26,6 +33,11 @@ public class DocumentService {
 
     @Transactional
     public DocumentResponse upload(MultipartFile file, String name) {
+        String contentType = file.getContentType();
+        if (contentType == null || !ACCEPTED_TYPES.contains(contentType)) {
+            throw new UnsupportedFileTypeException(contentType);
+        }
+
         String filePath = fileStorageService.store(file);
 
         Document document = Document.builder()

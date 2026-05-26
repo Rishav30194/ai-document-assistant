@@ -100,15 +100,15 @@ A standalone search endpoint — no chat session needed. Send a query, get back 
 
 ---
 
-## Phase 5 — Polish
+## Phase 5 — Polish ✅
 
 **What this phase delivers:**
 Production-quality observability, input validation, and a complete README so anyone can clone the repo and run it.
 
-- [ ] Input validation — reject files that are too large or not PDF/DOCX before they hit the pipeline
-- [ ] Structured logging — JSON log format, useful for log aggregation tools
-- [ ] Integration tests — Testcontainers spins up a real PostgreSQL + Redis in CI, tests the full upload-to-search pipeline end-to-end
-- [ ] `README.md` — setup instructions, architecture diagram, and sample API requests
+- [x] Input validation — `UnsupportedFileTypeException` (415) rejects anything that isn't PDF or DOCX before it hits the pipeline
+- [x] Structured logging — JSON log format via Spring Boot 3.4 native structured logging; activate with the `structured` profile
+- [x] Integration tests — Testcontainers spins up a real pgvector PostgreSQL + Redis; tests the full upload → ingest → search pipeline end-to-end with a fake `EmbeddingModel` (no API calls needed)
+- [x] `README.md` — setup instructions, ASCII architecture diagram, full API reference with curl examples, environment variable table
 
 ---
 
