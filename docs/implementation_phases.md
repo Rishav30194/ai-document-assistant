@@ -82,21 +82,21 @@ Users can ask questions about their uploaded documents and get answers grounded 
 
 ---
 
-## Phase 4 — Semantic Search
+## Phase 4 — Semantic Search ✅
 
 **What this phase delivers:**
 A standalone search endpoint — no chat session needed. Send a query, get back the most relevant chunks from your documents ranked by similarity. Can search across all documents or filter to a single one.
 
 **Search API**
-- [ ] `POST /api/search` — search with `{ query, documentId (optional), topK }`
-- [ ] Response includes each matching chunk with its source document name and a relevance score
+- [x] `POST /api/search` — search with `{ query, documentId (optional), topK (1–20, default 5) }`
+- [x] Response includes each matching chunk with its source document name and a relevance score
 
 **Under the Hood**
-- [ ] `SearchService` — embeds the query via OpenAI, runs similarity search in pgvector, returns ranked results
+- [x] `SearchService` — embeds the query via OpenAI, runs similarity search in pgvector, returns ranked results
 
 **Tests**
-- [ ] `SearchServiceTest` — verifies ranking and filtering logic (mocked vector store)
-- [ ] `SearchControllerTest` — verifies HTTP contract
+- [x] `SearchServiceTest` (6 tests) — verifies scoring, topK passthrough, document filter, empty results
+- [x] `SearchControllerTest` (5 tests) — verifies HTTP contract including validation
 
 ---
 
